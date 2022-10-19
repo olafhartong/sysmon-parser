@@ -1,8 +1,15 @@
 [xml]$schema = Sysmon.exe -nologo -s
 $sysmonColumnList = @()
 $sysmonColumnList= $schema.manifest.events.event.data | select name -Unique | foreach {$_.name}
+$date=Get-Date
 $nativeColumnList = @("TimeGenerated", "Source", "EventLog", "Computer", "EventLevel", "EventLevelName", "EventID", "UserName", "RenderedDescription", "MG", "ManagementGroupName", "_ResourceId")
+$header = @'
+// KQL Sysmon Event Parser
+// Last Updated Date: 
+'@ + $date
 $querybase = @'
+
+// Sysmon Version: Applicable to all versions
 Event
 | where Source == "Microsoft-Windows-Sysmon"
 | extend RenderedDescription = tostring(split(RenderedDescription, ":")[0])
@@ -31,5 +38,5 @@ $tail = @'
 | parse RuleName with * 'technique_id=' TechniqueId ',' * 'technique_name=' TechniqueName
 | parse Hashes with * 'SHA1=' SHA1 ',' * 'MD5=' MD5 ',' * 'SHA256=' SHA256 ',' * 'IMPHASH=' IMPHASH 
 '@
-$parser = $querybase + $extend + $tail
+$parser = $header + $querybase + $extend + $tail
 $parser | Out-File Sysmon-AllVersions_Parser.txt
