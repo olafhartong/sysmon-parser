@@ -1,5 +1,3 @@
-[![Build status](https://dev.azure.com/olafhartong/Sysmon-parser/_apis/build/status/Sysmon-parser-CI)](https://dev.azure.com/olafhartong/Sysmon-parser/_build/latest?definitionId=11)
-
 # sysmon-parser
 Automatically generated Sysmon parser for Azure Sentinel
 
